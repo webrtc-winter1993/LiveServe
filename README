@@ -1,0 +1,4 @@
+#先下载安装 redis
+#启动redis
+#npm i
+#node index.js
