@@ -1,24 +1,26 @@
 const {hSet,hGetAll,hDel}  = require('./redis')
 const {getMsg,getParams} = require('./common')
 
-const http = require('http')
 var fs=require('fs');  
-var express = require('express');
 const { log } = require('console');
+const https = require('https');
+const http = require('http')
+var express = require('express');
 var app = express();
 
+const options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+};
 
 //http server
 // app.use(express.static('./dist'));
 // app.use(function (req, res,next) {
 //   res.sendfile('./dist/index.html');  //路径根据自己文件配置
 // });  
-var server=http.createServer(app)
+var server=https.createServer(options,app)
 //socket server
-let io = require('socket.io')(server,{allowEIO3:true,cors: {
-    origin: "http://localhost:8080",
-    methods: ["GET", "POST"]
-  }});
+let io = require('socket.io')(server,{allowEIO3:true});
 
 //自定义命令空间  nginx代理 /mediaServerWsUrl { http://xxxx:18080/socket.io/ }
 // io = io.of('mediaServerWsUrl')
